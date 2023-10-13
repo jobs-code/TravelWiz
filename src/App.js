@@ -23,7 +23,6 @@ const Container = styled.div`
     -ms-overflow-style: none;
   }
 `;
-
 const MainContent = styled.div`
   flex-basis: 70%;
   display: flex;
@@ -81,7 +80,6 @@ const Title = styled.h1`
     font-size: 2.4rem;
   }
 `;
-
 const Subtitle = styled.h2`
   font-size: 1rem;
   font-weight: normal;
@@ -95,7 +93,6 @@ const FormContainer = styled.form`
 
   top: 0;
 `;
-
 const Loading = styled.p`
   color: gradient;
   font-size: 4rem;
@@ -120,7 +117,6 @@ const Loading = styled.p`
     }
   }
 `;
-
 const Label = styled.label`
   font-size: 0.8rem;
   font-weight: bold;
@@ -128,7 +124,6 @@ const Label = styled.label`
   color: #000fs0;
   padding: 0.4rem;
 `;
-
 const Input = styled.input`
   border-radius: 0.4rem;
   border: 1px solid #ccc;
@@ -142,7 +137,6 @@ const Input = styled.input`
     border-color: #007bff;
   }
 `;
-
 const Select = styled.select`
   padding: 0.6rem 0.6rem;
   border-radius: 0.5rem;
@@ -156,7 +150,6 @@ const Select = styled.select`
     border-color: #007bff;
   }
 `;
-
 const Button = styled.button`
   padding: 0.5rem 1rem;
   width: 100%;
@@ -183,7 +176,6 @@ const Button = styled.button`
     cursor: not-allowed;
   }
 `;
-
 const FormRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -259,7 +251,6 @@ const TopLocationContainer = styled.div`
 
   margin-top: 0.4rem;
 `;
-
 const LanguageOption = styled.div`
   display: flex;
   font-size: 1.4rem;
@@ -286,7 +277,6 @@ const LanguageOption = styled.div`
     border-radius: 0.4rem;
   }
 `;
-
 const PinButton = styled.div`
   display: flex;
   align-items: center;
@@ -801,7 +791,16 @@ const AITravelPlanner = () => {
       },
       body: JSON.stringify({ prompt: prompt }),
     })
-      .then((response) => response.json())
+      //.then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+            return response.text().then((text) => {
+                throw new Error(`Server error: ${text}`);
+            });
+        }
+        return response.json();
+    })
+    
       .then((data) => {
         setResponse(data.choices[0].message.content);
         setLoading(false);
@@ -821,7 +820,7 @@ const AITravelPlanner = () => {
       body: JSON.stringify({ email: email }),
     };
     fetch(
-      "https://c4-na.altogic.com/e:652903bfd23f9da07555642a/travel",
+      "https://c4-na.altogic.com/e:652903bfd23f9da07555642a/tester",
       requestOptions
     )
       .then((response) => response.json())
@@ -866,6 +865,24 @@ const AITravelPlanner = () => {
                 </PinButton>
               ))}
             </TopLocationContainer>
+            <Label htmlFor="transportationType">
+              Excluded places:
+              <p
+                style={{
+                  display: "inline-block",
+                  fontSize: "10px",
+
+                  color: "#666",
+                }}
+              >
+              
+              </p><br></br>
+            </Label>
+            <Input
+              type="text"
+              id="excludedplaces"
+              name="excludedplaces"
+              />
             <FormRow>
               <FormGroup>
                 <Label htmlFor="budget">
